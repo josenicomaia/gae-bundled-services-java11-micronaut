@@ -12,4 +12,7 @@
   limitations under the License.
 -->
 <datastore-indexes autoGenerate="true">
+    <datastore-index kind="Greeting" ancestor="true" source="manual">
+        <property name="content" direction="asc"/>
+    </datastore-index>
 </datastore-indexes>
