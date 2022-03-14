@@ -17,6 +17,7 @@
   <groupId>com.example.appengine</groupId>
   <artifactId>micronaut-helloworld</artifactId>
   <version>0.1</version>
+  <packaging>war</packaging>
 
   <!--
   The parent pom defines common style checks and testing strategies for our samples.
@@ -34,6 +35,7 @@
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
     <micronaut.version>3.3.4</micronaut.version>
+    <micronaut.servlet.version>3.2.1</micronaut.servlet.version>
   </properties>
 
   <dependencies>
@@ -67,12 +69,20 @@
       <version>1.3.2</version>
       <scope>compile</scope>
     </dependency>
+
     <dependency>
-      <groupId>io.micronaut</groupId>
-      <artifactId>micronaut-http-server-netty</artifactId>
-      <version>${micronaut.version}</version>
-      <scope>compile</scope>
+      <groupId>io.micronaut.servlet</groupId>
+      <artifactId>micronaut-http-server-jetty</artifactId>
+      <version>${micronaut.servlet.version}</version>
+      <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>io.micronaut.servlet</groupId>
+      <artifactId>micronaut-servlet-engine</artifactId>
+      <version>${micronaut.servlet.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -82,6 +92,8 @@
   </dependencies>
 
   <build>
+    <!-- for hot reload of the web application -->
+    <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
     <plugins>
       <plugin>
         <groupId>com.google.cloud.tools</groupId>
@@ -90,6 +102,9 @@
         <configuration>
           <projectId>GCLOUD_CONFIG</projectId>
           <version>micronaut-helloworld</version>
+          <gcloudMode>beta</gcloudMode>
+          <deploy.promote>true</deploy.promote>
+          <deploy.stopPreviousVersion>true</deploy.stopPreviousVersion>
         </configuration>
       </plugin>
       <plugin>
@@ -144,6 +159,11 @@
               <arg>-parameters</arg>
             </compilerArgs>
             <annotationProcessorPaths>
+              <annotationProcessorPath>
+                <groupId>com.google.auto.value</groupId>
+                <artifactId>auto-value</artifactId>
+                <version>1.9</version>
+              </annotationProcessorPath>
               <path>
                 <groupId>io.micronaut</groupId>
                 <artifactId>micronaut-inject-java</artifactId>
@@ -181,6 +201,11 @@
               </configuration>
             </execution>
           </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>9.4.44.v20210927</version>
         </plugin>
       </plugins>
 
